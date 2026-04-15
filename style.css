@@ -4,9 +4,12 @@
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+
+  /* 🌿 SOFT SKINCARE COLOR */
+  background: linear-gradient(180deg, #f5efe6, #f3e7db);
+
+  color: #2c2c2c;
   min-height: 100vh;
 }
 
@@ -20,202 +23,154 @@ body {
 
 .card {
   width: 100%;
-  max-width: 560px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  padding: 22px 16px 18px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  max-width: 520px;
+  background: transparent;
+  padding: 18px 14px;
 }
 
 h1 {
   text-align: center;
-  margin: 0 0 8px;
-  font-size: 30px;
-  font-weight: 800;
+  font-size: 26px;
+  margin-bottom: 4px;
 }
 
 .sub {
   text-align: center;
-  color: #dbe4f0;
-  margin: 0 0 18px;
-  font-size: 16px;
-  line-height: 1.4;
+  font-size: 14px;
+  margin-bottom: 18px;
+  color: #444;
 }
 
-input[type="text"] {
+input {
   width: 100%;
-  border: 0;
-  border-radius: 16px;
-  padding: 16px;
-  font-size: 18px;
+  border-radius: 14px;
+  padding: 14px;
+  border: none;
+  background: #e9e6e3;
+  font-size: 16px;
   margin-bottom: 14px;
-  outline: none;
 }
 
+/* 📸 PHOTO BOX */
 .photo-box {
   position: relative;
   width: 100%;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
-  background: #0b1220;
-  min-height: 360px;
+  background: #ddd;
 }
 
 video,
 .photo-box img {
   width: 100%;
-  height: 430px;
+  height: 360px;
   object-fit: cover;
-  display: block;
-  background: #0b1220;
 }
 
+/* ✨ GLOW FACE BOX */
 .face-box {
   position: absolute;
-  inset: 14% 18%;
-  border: 3px solid rgba(34, 197, 94, 0.92);
-  border-radius: 24px;
-  box-shadow: 0 0 18px rgba(34, 197, 94, 0.45);
-  pointer-events: none;
+  inset: 18% 22%;
+  border-radius: 22px;
+  border: 3px solid #8af0c8;
+  box-shadow:
+    0 0 12px #8af0c8,
+    0 0 25px rgba(138, 240, 200, 0.5);
 }
 
+/* 🔥 SCAN LINE */
 .scan-line {
   position: absolute;
   left: 0;
   right: 0;
   height: 4px;
-  background: rgba(34, 197, 94, 0.95);
-  box-shadow: 0 0 15px rgba(34, 197, 94, 0.85);
+  background: #7ee0c2;
   animation: scan 2s linear infinite;
 }
 
 @keyframes scan {
-  0% {
-    top: 0;
-  }
-  100% {
-    top: calc(100% - 4px);
-  }
+  0% { top: 0; }
+  100% { top: calc(100% - 4px); }
 }
 
+/* 🎯 BUTTONS */
 .actions {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   margin-top: 14px;
 }
 
 button {
-  width: 100%;
-  border: 0;
-  border-radius: 16px;
-  padding: 16px;
-  font-size: 20px;
-  font-weight: 700;
+  border: none;
+  border-radius: 20px;
+  padding: 14px;
+  font-size: 17px;
+  font-weight: 600;
+  background: #e88c72;
   color: white;
-  background: #22c55e;
   cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 button:hover {
-  opacity: 0.96;
-  transform: translateY(-1px);
+  opacity: 0.95;
 }
 
 button.secondary {
-  background: #475569;
+  background: #d97a63;
 }
 
-.status {
-  text-align: center;
-  min-height: 24px;
-  margin: 14px 0 0;
-  color: #cbd5e1;
-  font-size: 15px;
-}
-
+/* 📊 RESULT CARD */
 .result {
   margin-top: 18px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 18px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px;
 }
 
-.result h2,
-.result h3 {
+.result h2 {
   margin-top: 0;
 }
 
 .result-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
 .metric {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 12px;
+  background: #f4f4f4;
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .metric span {
-  display: block;
-  color: #cbd5e1;
-  font-size: 14px;
-  margin-bottom: 6px;
+  font-size: 13px;
+  color: #666;
 }
 
 .metric strong {
-  font-size: 22px;
+  font-size: 20px;
+  display: block;
+  margin-top: 4px;
 }
 
+/* 🧠 SUMMARY */
 .summary {
-  margin-top: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 14px;
+  margin-top: 12px;
+  background: #f7f7f7;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.status {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
 }
 
 .hidden {
   display: none !important;
-}
-
-@media (max-width: 480px) {
-  .app {
-    padding: 10px;
-  }
-
-  .card {
-    max-width: 100%;
-    padding: 18px 12px 14px;
-    border-radius: 22px;
-  }
-
-  h1 {
-    font-size: 26px;
-  }
-
-  .sub {
-    font-size: 15px;
-  }
-
-  input[type="text"] {
-    font-size: 17px;
-    padding: 15px;
-  }
-
-  video,
-  .photo-box img {
-    height: 380px;
-  }
-
-  button {
-    font-size: 18px;
-    padding: 15px;
-  }
-
-  .result-grid {
-    grid-template-columns: 1fr 1fr;
-  }
 }
