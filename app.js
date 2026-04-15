@@ -1,8 +1,5 @@
-
 const video = document.getElementById("video");
-const canvas = document.getElementById("canvas");
 const preview = document.getElementById("preview");
-const previewWrap = document.getElementById("previewWrap");
 const scanLine = document.getElementById("scanLine");
 const resultBox = document.getElementById("resultBox");
 const statusText = document.getElementById("statusText");
@@ -23,6 +20,7 @@ const scanBtn = document.getElementById("scanBtn");
 let stream = null;
 let capturedImageBase64 = "";
 
+// Replace this later with your real backend URL
 const BACKEND_URL = "YOUR_BACKEND_URL_HERE";
 
 openCamBtn.addEventListener("click", startCamera);
@@ -34,8 +32,13 @@ async function startCamera() {
   try {
     statusText.textContent = "Opening front camera...";
 
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      statusText.textContent = "Camera is not supported on this browser.";
+      return;
+    }
+
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stopCamera();
     }
 
     stream = await navigator.mediaDevices.getUserMedia({
@@ -50,10 +53,13 @@ async function startCamera() {
     video.srcObject = stream;
     await video.play();
 
+    video.classList.remove("hidden");
+    preview.classList.add("hidden");
+
     statusText.textContent = "Camera ready.";
   } catch (error) {
-    console.error(error);
-    statusText.textContent = "Camera could not be opened. Check browser permission.";
+    console.error("Camera error:", error);
+    statusText.textContent = "Camera could not be opened. Check permission.";
   }
 }
 
@@ -71,12 +77,13 @@ function capturePhoto() {
     return;
   }
 
+  const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
 
   const ctx = canvas.getContext("2d");
 
-  // Mirror selfie
+  // Mirror selfie effect
   ctx.save();
   ctx.translate(width, 0);
   ctx.scale(-1, 1);
@@ -84,18 +91,22 @@ function capturePhoto() {
   ctx.restore();
 
   capturedImageBase64 = canvas.toDataURL("image/jpeg", 0.92);
-  preview.src = capturedImageBase64;
-  previewWrap.classList.remove("hidden");
-  resultBox.classList.add("hidden");
 
+  preview.src = capturedImageBase64;
+  preview.classList.remove("hidden");
+  video.classList.add("hidden");
+
+  resultBox.classList.add("hidden");
   statusText.textContent = "Selfie captured.";
 }
 
 function retakePhoto() {
   capturedImageBase64 = "";
   preview.src = "";
-  previewWrap.classList.add("hidden");
+  preview.classList.add("hidden");
+  video.classList.remove("hidden");
   resultBox.classList.add("hidden");
+  clearResults();
   statusText.textContent = "Retake ready.";
 }
 
@@ -110,6 +121,18 @@ async function scanNow() {
   scanLine.classList.remove("hidden");
   resultBox.classList.add("hidden");
   statusText.textContent = "Scanning face...";
+
+  // DEMO MODE
+  // Remove this block later if real backend is ready
+  if (BACKEND_URL === "YOUR_BACKEND_URL_HERE") {
+    setTimeout(() => {
+      const fakeData = generateFakeResult();
+      showResults(fakeData);
+      scanLine.classList.add("hidden");
+      statusText.textContent = "Demo scan completed.";
+    }, 2200);
+    return;
+  }
 
   try {
     const response = await fetch(BACKEND_URL, {
@@ -128,43 +151,87 @@ async function scanNow() {
     }
 
     const data = await response.json();
-
-    // expected response shape from your backend
-    // {
-    //   acne: 31,
-    //   pores: 47,
-    //   wrinkles: 15,
-    //   redness: 22,
-    //   dark_spots: 18,
-    //   skin_age: 27,
-    //   summary: "..."
-    // }
-
-    acneVal.textContent = formatValue(data.acne);
-    poresVal.textContent = formatValue(data.pores);
-    wrinklesVal.textContent = formatValue(data.wrinkles);
-    rednessVal.textContent = formatValue(data.redness);
-    spotsVal.textContent = formatValue(data.dark_spots);
-    skinAgeVal.textContent = data.skin_age ?? "-";
-    summaryText.textContent = data.summary || "Scan completed.";
-
-    resultBox.classList.remove("hidden");
+    showResults(data);
     statusText.textContent = "Scan completed.";
   } catch (error) {
-    console.error(error);
-    statusText.textContent = "Scan failed. Check backend URL or API connection.";
+    console.error("Scan error:", error);
+    statusText.textContent = "Scan failed. Check backend connection.";
   } finally {
     scanLine.classList.add("hidden");
   }
 }
 
+function showResults(data) {
+  acneVal.textContent = formatValue(data.acne);
+  poresVal.textContent = formatValue(data.pores);
+  wrinklesVal.textContent = formatValue(data.wrinkles);
+  rednessVal.textContent = formatValue(data.redness);
+  spotsVal.textContent = formatValue(data.dark_spots);
+  skinAgeVal.textContent = data.skin_age ?? "-";
+  summaryText.textContent = data.summary || "Scan completed.";
+
+  resultBox.classList.remove("hidden");
+}
+
+function clearResults() {
+  acneVal.textContent = "-";
+  poresVal.textContent = "-";
+  wrinklesVal.textContent = "-";
+  rednessVal.textContent = "-";
+  spotsVal.textContent = "-";
+  skinAgeVal.textContent = "-";
+  summaryText.textContent = "-";
+}
+
 function formatValue(value) {
-  if (value === null || value === undefined) return "-";
+  if (value === null || value === undefined) {
+    return "-";
+  }
   return `${value}`;
 }
 
-window.addEventListener("beforeunload", () => {
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
+function randomScore(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateFakeResult() {
+  const acne = randomScore(10, 65);
+  const pores = randomScore(15, 70);
+  const wrinkles = randomScore(5, 45);
+  const redness = randomScore(8, 50);
+  const darkSpots = randomScore(6, 55);
+  const skinAge = randomScore(19, 38);
+
+  let summary = "Skin looks generally balanced.";
+
+  if (acne >= 50) {
+    summary = "Visible acne activity detected. Focus on oil control and gentle cleansing.";
+  } else if (pores >= 50) {
+    summary = "Noticeable pores detected. Hydration and pore-care products may help.";
+  } else if (redness >= 40) {
+    summary = "Some redness is visible. A soothing skincare routine may help calm the skin.";
+  } else if (wrinkles >= 35) {
+    summary = "Fine lines are slightly visible. Hydration and barrier support may help improve texture.";
   }
+
+  return {
+    acne,
+    pores,
+    wrinkles,
+    redness,
+    dark_spots: darkSpots,
+    skin_age: skinAge,
+    summary
+  };
+}
+
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach((track) => track.stop());
+    stream = null;
+  }
+}
+
+window.addEventListener("beforeunload", () => {
+  stopCamera();
 });
