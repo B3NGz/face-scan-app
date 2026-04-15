@@ -1,1 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Face Scan</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="card">
+      <h1>AI FACE SCAN</h1>
+      <p class="sub">Take a selfie and scan your face</p>
 
+      <input type="text" id="name" placeholder="Name (optional)" />
+
+      <div class="camera-wrap" id="cameraWrap">
+        <video id="video" autoplay playsinline muted></video>
+        <div class="face-box"></div>
+      </div>
+
+      <canvas id="canvas"></canvas>
+
+      <div class="preview-wrap hidden" id="previewWrap">
+        <img id="preview" alt="Captured selfie" />
+        <div class="scan-line hidden" id="scanLine"></div>
+      </div>
+
+      <div class="actions">
+        <button id="openCamBtn">Open Front Camera</button>
+        <button id="captureBtn">Take a Photo / Selfie</button>
+        <button id="retakeBtn" class="secondary">Retake</button>
+        <button id="scanBtn">Scan Now</button>
+      </div>
+
+      <p id="statusText" class="status"></p>
+
+      <section id="resultBox" class="result hidden">
+        <h2>Scan Result</h2>
+        <div class="result-grid">
+          <div class="metric"><span>Acne</span><strong id="acneVal">-</strong></div>
+          <div class="metric"><span>Pores</span><strong id="poresVal">-</strong></div>
+          <div class="metric"><span>Wrinkles</span><strong id="wrinklesVal">-</strong></div>
+          <div class="metric"><span>Redness</span><strong id="rednessVal">-</strong></div>
+          <div class="metric"><span>Dark Spots</span><strong id="spotsVal">-</strong></div>
+          <div class="metric"><span>Skin Age</span><strong id="skinAgeVal">-</strong></div>
+        </div>
+
+        <div class="summary">
+          <h3>Summary</h3>
+          <p id="summaryText">-</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
